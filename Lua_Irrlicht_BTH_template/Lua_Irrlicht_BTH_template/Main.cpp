@@ -12,6 +12,8 @@
 #include "lua.hpp"
 #include <irrlicht.h>
 
+//This is a test
+
 void ConsoleThread(lua_State* L) {
 	char command[1000];
 	while(GetConsoleWindow()) {

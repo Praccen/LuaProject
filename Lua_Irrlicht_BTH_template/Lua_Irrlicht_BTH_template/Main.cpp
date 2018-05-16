@@ -13,23 +13,11 @@
 #include <irrlicht.h>
 
 #include "Scene.h"
-
-void ConsoleThread(lua_State* L) {
-	char command[1000];
-	while(GetConsoleWindow()) {
-		memset(command, 0, 1000);
-		std::cin.getline(command, 1000);
-		if( luaL_loadstring(L, command) || lua_pcall(L, 0, 0, 0) )
-			std::cout << lua_tostring(L, -1) << '\n';
-	}
-}
+#include "LuaHandler.h"
 
 int main()
 {
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-
-		std::thread conThread(ConsoleThread, L);
+	LuaHandler luaHandler;
 
 	irr::IrrlichtDevice* device = irr::createDevice(irr::video::EDT_SOFTWARE, irr::core::dimension2d<irr::u32>(640, 480), 16, false, false, true, 0);
 	if(!device)
@@ -55,6 +43,6 @@ int main()
 
 	device->drop();
 
-	conThread.join();
+	luaHandler.join();
 	return 0;
 }

@@ -1,13 +1,16 @@
 #pragma once
 
+#include <irrlicht.h>
+
 class Scene {
 private:
-
-	
+	irr::IrrlichtDevice* m_device;
+	irr::scene::ISceneManager* smgr;
 
 public:
-	Scene();
+	Scene(irr::IrrlichtDevice* device);
 	~Scene();
 
-
+	void update();
+	void draw();
 };

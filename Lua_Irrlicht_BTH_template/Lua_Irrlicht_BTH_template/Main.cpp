@@ -12,7 +12,7 @@
 #include "lua.hpp"
 #include <irrlicht.h>
 
-//This is a test
+#include "Scene.h"
 
 void ConsoleThread(lua_State* L) {
 	char command[1000];
@@ -37,24 +37,17 @@ int main()
 
 	device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
 	irr::video::IVideoDriver* driver	= device->getVideoDriver();
-	irr::scene::ISceneManager* smgr		= device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv	= device->getGUIEnvironment();
 
 	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!", irr::core::rect<irr::s32>(10, 10, 260, 22), true);
 
-	smgr->addCameraSceneNodeFPS(0, 100.0f, 0.5f, -1, 0, 0, false, 0.0f, false, true);
+	Scene scene(device);
 
 	while(device->run()) {
 		driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
-		if (device->isWindowActive()) {
-			smgr->getActiveCamera()->setInputReceiverEnabled(true);
-			device->getCursorControl()->setVisible(false);
-		}
-		else {
-			smgr->getActiveCamera()->setInputReceiverEnabled(false);
-			//device->getCursorControl()->setVisible(true);
-		}
-		smgr->drawAll();
+		
+		scene.update();
+		scene.draw();
 		guienv->drawAll();
 
 		driver->endScene();		

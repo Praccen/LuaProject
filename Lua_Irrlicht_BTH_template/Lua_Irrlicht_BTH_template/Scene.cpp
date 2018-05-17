@@ -13,7 +13,7 @@ Scene::~Scene() {
 
 void Scene::update() {
 	if (m_device->isWindowActive()) {
-		smgr->getCamera()->setInputReceiverEnabled(true);
+		smgr->getActiveCamera()->setInputReceiverEnabled(true);
 		m_device->getCursorControl()->setVisible(false);
 	}
 	else {

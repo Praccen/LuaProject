@@ -10,7 +10,9 @@ void ConsoleThread(lua_State* L) {
 	}
 }
 
-LuaHandler::LuaHandler() {
+LuaHandler::LuaHandler(Scene* scene) {
+	m_scene = scene;
+
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 	m_conThread = std::thread(ConsoleThread, L); //Starts console input thread
@@ -31,7 +33,5 @@ void LuaHandler::join() {
 int LuaHandler::addMesh(lua_State * L) {
 	luaL_argcheck(L, lua_istable(L, -1), -1, "hej");
 	int b = lua_gettable(L, 1);
-	//int a = lua_getfield(L, -1, "hej");
-	//eheje
 	return 0;
 }

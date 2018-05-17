@@ -12,14 +12,16 @@
 #include <thread>
 #include "lua.hpp"
 
+#include "Scene.h"
 
 class LuaHandler {
 private:
+	Scene * m_scene;
 	lua_State * m_luaState;
 	std::thread m_conThread;
 
 public:
-	LuaHandler();
+	LuaHandler(Scene* scene);
 	~LuaHandler();
 
 	static int addMesh(lua_State * L);

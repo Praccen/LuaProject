@@ -9,7 +9,7 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	m_camera = m_smgr->addCameraSceneNodeFPS(0, 100.0f, 0.005f, -1, 0, 0, false, 0.0f, false, true);
 	m_camera->setPosition(core::vector3df(0.0f, 0.0f, 0.0f));
 
-	addMesh(core::vector3df(-50.0f, -50.0f, 200.0f), core::vector3df(50.0f, -50.0f, 200.0f), core::vector3df(0.0f, 50.0f, 200.0f));
+	//addMesh(core::vector3df(-50.0f, -50.0f, 200.0f), core::vector3df(50.0f, -50.0f, 200.0f), core::vector3df(0.0f, 50.0f, 200.0f));
 }
 
 Scene::~Scene() {

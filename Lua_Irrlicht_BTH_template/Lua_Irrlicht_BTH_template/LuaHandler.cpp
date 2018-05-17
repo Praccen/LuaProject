@@ -1,5 +1,6 @@
 #include "LuaHandler.h"
-#include <irrlicht.h>
+
+Scene* LuaHandler::m_scene;
 
 void ConsoleThread(lua_State* L) {
 	char command[1000];
@@ -108,7 +109,7 @@ int LuaHandler::addMesh(lua_State * L) {
 
 	irr::core::vector3df vertex3(x, y, z);
 
-	//scene->addMesh(vertex1, vertex2, vertex3);
+	m_scene->addMesh(vertex1, vertex2, vertex3);
 
 	return 0;
 }

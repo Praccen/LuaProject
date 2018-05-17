@@ -10,13 +10,14 @@
 #include <Windows.h>
 #include <iostream>
 #include <thread>
+#include <irrlicht.h>
 #include "lua.hpp"
 
 #include "Scene.h"
 
 class LuaHandler {
 private:
-	Scene * m_scene;
+	static Scene * m_scene;
 	lua_State * m_luaState;
 	std::thread m_conThread;
 

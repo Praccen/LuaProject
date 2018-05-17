@@ -41,7 +41,7 @@ int main()
 		driver->endScene();		
 	}
 
-	device->drop();
+	//device->drop();
 
 	luaHandler.join(); //Joins LuaHandler thread
 	return 0;

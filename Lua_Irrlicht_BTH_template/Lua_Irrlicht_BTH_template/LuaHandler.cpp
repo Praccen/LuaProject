@@ -33,6 +33,6 @@ int LuaHandler::addMesh(lua_State * L) {
 	luaL_argcheck(L, lua_istable(L, -1), -1, "hej");
 	int b = lua_gettable(L, 1);
 	//int a = lua_getfield(L, -1, "hej");
-
+	//eheje
 	return 0;
 }

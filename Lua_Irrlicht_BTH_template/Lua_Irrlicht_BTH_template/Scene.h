@@ -11,6 +11,8 @@ public:
 	Scene(irr::IrrlichtDevice* device);
 	~Scene();
 
+
+
 	void update();
 	void draw();
 };

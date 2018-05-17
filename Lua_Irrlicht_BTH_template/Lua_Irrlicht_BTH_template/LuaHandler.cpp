@@ -13,7 +13,7 @@ void ConsoleThread(lua_State* L) {
 LuaHandler::LuaHandler() {
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
-
+	//hej
 	m_conThread = std::thread(ConsoleThread, L); //Starts console input thread
 
 	lua_pushcfunction(L, addMesh);

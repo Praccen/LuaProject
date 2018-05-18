@@ -139,7 +139,10 @@ int LuaHandler::getNodes(lua_State * L) {
 	return 0;
 }
 
-
+int LuaHandler::snapshot(lua_State * L) {
+	m_scene->snapshot("test.png");
+	return 0;
+}
 
 irr::core::vector3df LuaHandler::createVector3(lua_State * L, int idx) {
 	float x, y, z;

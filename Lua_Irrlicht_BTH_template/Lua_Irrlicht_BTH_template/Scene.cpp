@@ -97,6 +97,18 @@ std::vector<nodeInfo> Scene::getNodes() {
 	return returnVector;
 }
 
+int Scene::snapshot(std::string filePath) {
+	int returnValue = 0;
+	io::path path = filePath.c_str();
+	video::IImage* screenshot = m_device->getVideoDriver()->createScreenShot();
+	io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path);
+	if (m_device->getVideoDriver()->writeImageToFile(screenshot, file)) {
+		file->drop();
+		returnValue = 1;
+	}
+	return returnValue;
+}
+
 void Scene::update() {
 	if (m_device->isWindowActive()) {
 		m_smgr->getActiveCamera()->setInputReceiverEnabled(true);

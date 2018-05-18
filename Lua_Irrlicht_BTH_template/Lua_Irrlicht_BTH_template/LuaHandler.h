@@ -32,6 +32,7 @@ public:
 	static int addBox(lua_State * L);
 	static int camera(lua_State * L);
 	static int getNodes(lua_State * L);
+	static int snapshot(lua_State * L);
 
 	static irr::core::vector3df createVector3(lua_State * L, int idx);
 

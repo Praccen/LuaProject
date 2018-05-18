@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <irrlicht.h>
+#include <vector>
 
 class Scene {
 private:
@@ -14,8 +15,9 @@ public:
 	Scene(irr::IrrlichtDevice* device);
 	~Scene();
 
-	void addMesh(irr::core::vector3df vertex1, irr::core::vector3df vertex2, irr::core::vector3df vertex3);
+	void addMesh(std::vector<std::vector<irr::core::vector3df>> triangles);
 	void addBox(irr::core::vector3df position, float size, std::string name);
+	void setCamera(irr::core::vector3df position, irr::core::vector3df target);
 
 	void update();
 	void draw();

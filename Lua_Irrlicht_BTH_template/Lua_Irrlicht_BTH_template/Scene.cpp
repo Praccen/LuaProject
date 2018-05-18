@@ -13,7 +13,7 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	//addMesh(core::vector3df(-50.0f, -50.0f, 200.0f), core::vector3df(50.0f, -50.0f, 200.0f), core::vector3df(0.0f, 50.0f, 200.0f));
 	//addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
 
-	addBox(core::vector3df(0,0,30), 10, "BoxD");
+	//addBox(core::vector3df(0,0,30), 10, "BoxD");
 }
 
 Scene::~Scene() {

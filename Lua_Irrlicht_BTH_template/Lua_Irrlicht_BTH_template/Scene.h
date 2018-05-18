@@ -17,6 +17,8 @@ private:
 	irr::scene::ICameraSceneNode* m_camera;
 
 	int m_nrOfNodes = 0;
+	int m_nrOfMeshes = 0;
+	int m_nrOfBoxes = 0;
 public:
 	Scene(irr::IrrlichtDevice* device);
 	~Scene();

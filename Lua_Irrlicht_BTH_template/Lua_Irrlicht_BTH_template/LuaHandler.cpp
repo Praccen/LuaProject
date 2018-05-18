@@ -44,7 +44,6 @@ void LuaHandler::join() {
 //addMesh({{ 1,2,3,4 },{},{}})               --Error : number of components
 //addMesh({{ 1,2,3 }})                       --Error : not a valid number of vertices
 int LuaHandler::addMesh(lua_State * L) {
-	int len;
 	luaL_argcheck(L, lua_istable(L, -1), -1, "Error - Expected table");
 	int input = lua_gettop(L);
 
@@ -89,7 +88,7 @@ int LuaHandler::addBox(lua_State * L) {
 	//Error checking
 	luaL_argcheck(L, top > 1 && top < 4, -1, "Error - Invalid number of arguments");
 	luaL_argcheck(L, lua_istable(L, 1), -1, "Error - Expected table in first argument");
-	luaL_argcheck(L, lua_isinteger(L, 2), -1, "Error - Expected number in second argument");
+	luaL_argcheck(L, lua_isnumber(L, 2), -1, "Error - Expected number in second argument");
 	if (top == 3) {
 		luaL_argcheck(L, lua_type(L, 3) == LUA_TSTRING, -1, "Error - Expected string in third argument");
 	}
@@ -134,7 +133,35 @@ int LuaHandler::camera(lua_State * L) {
 
 int LuaHandler::getNodes(lua_State * L) {
 
-	return 0;
+	std::vector<nodeInfo>temp = m_scene->getNodes();
+
+	lua_newtable(L);
+	int top = lua_gettop(L);
+
+	int k = 0;
+	while (k < temp.size()) {
+		lua_pushnumber(L, (k + 1));
+		lua_newtable(L);
+		int current = lua_gettop(L);
+		lua_pushstring(L, "name");
+		lua_pushstring(L, temp.at(k).name.c_str());
+		lua_settable(L, current);
+		lua_settable(L, top);
+		lua_pushnumber(L, (k + 1));
+		lua_newtable(L);
+		current = lua_gettop(L);
+		lua_pushstring(L, "id");
+		lua_pushnumber(L, temp.at(k).id);
+		lua_settable(L, current);
+		lua_settable(L, top);
+		k++;
+	}
+	/*
+for i=1,10 do addBox({i,i,i},1.0-i/11.0) end
+for k,v in pairs(getNodes()) do for kk,vv in pairs(v) do print(k,kk,vv) end end
+camera({-10,0,0},{0,2,0})
+*/
+	return 1;
 }
 
 

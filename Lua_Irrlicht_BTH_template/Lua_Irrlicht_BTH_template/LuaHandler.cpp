@@ -27,6 +27,8 @@ LuaHandler::LuaHandler(Scene* scene) {
 	lua_setglobal(L, "camera");
 	lua_pushcfunction(L, getNodes);
 	lua_setglobal(L, "getNodes");
+	lua_pushcfunction(L, snapshot);
+	lua_setglobal(L, "snapshot");
 }
 
 

@@ -23,6 +23,8 @@ LuaHandler::LuaHandler(Scene* scene) {
 	lua_setglobal(L, "addMesh");
 	lua_pushcfunction(L, addBox);
 	lua_setglobal(L, "addBox");
+	lua_pushcfunction(L, camera);
+	lua_setglobal(L, "camera");
 }
 
 
@@ -165,5 +167,56 @@ int LuaHandler::addBox(lua_State * L) {
 
 	m_scene->addBox(pos, size, name);
 
+	return 0;
+}
+
+//TEST DATA
+/*
+camera({0,5,-20}, {0,0,0})
+*/
+int LuaHandler::camera(lua_State * L) {
+	int top = lua_gettop(L);
+	
+	//Error checking
+	luaL_argcheck(L, top == 2, -1, "Error - Invalid number of arguments");
+	luaL_argcheck(L, lua_istable(L, 1), -1, "Error - first argument has to be a table");
+	luaL_argcheck(L, lua_istable(L, 2), -2, "Error - second argument has to be a table");
+	lua_len(L, 1);
+	int len = (int)lua_tonumber(L, -1);
+	luaL_argcheck(L, len == 3, -1, "Error - wrong number of coordinates in position");
+	lua_len(L, 2);
+	len = (int)lua_tonumber(L, -1);
+	luaL_argcheck(L, len == 3, -2, "Error - wrong number of coordinates in target");
+	lua_pop(L, 2);
+
+	//Getting coordinates for camera position
+	float x, y, z;
+	lua_rawgeti(L, 1, 1);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
+	x = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, 1, 2);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
+	y = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, 1, 3);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
+	z = (float)lua_tonumber(L, -1);
+	lua_pop(L, 3);
+	irr::core::vector3df pos(x, y, z);
+
+	//Getting coordinates for target position
+	lua_rawgeti(L, 2, 1);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
+	x = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, 2, 2);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
+	y = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, 2, 3);
+	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
+	z = (float)lua_tonumber(L, -1);
+	lua_pop(L, 3);
+	irr::core::vector3df target(x, y, z);
+
+	m_scene->setCamera(pos, target);
+	
 	return 0;
 }

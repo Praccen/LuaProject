@@ -27,6 +27,8 @@ LuaHandler::LuaHandler(Scene* scene) {
 	lua_setglobal(L, "camera");
 	lua_pushcfunction(L, getNodes);
 	lua_setglobal(L, "getNodes");
+	lua_pushcfunction(L, snapshot);
+	lua_setglobal(L, "snapshot");
 }
 
 
@@ -162,7 +164,12 @@ int LuaHandler::getNodes(lua_State * L) {
 }
 
 int LuaHandler::snapshot(lua_State * L) {
-	m_scene->snapshot("test.png");
+	luaL_argcheck(L, lua_type(L, 1) == LUA_TSTRING, -1, "Error - expected string");
+	std::string file = lua_tostring(L, 1);
+
+	int result = m_scene->snapshot(file);
+	luaL_argcheck(L, result == 1, -1, "Error - file could not be created");
+
 	return 0;
 }
 

@@ -133,6 +133,8 @@ int LuaHandler::camera(lua_State * L) {
 }
 
 int LuaHandler::getNodes(lua_State * L) {
+	
+	std::vector<nodeInfo> temp = m_scene->getNodes();
 
 	return 0;
 }

@@ -13,6 +13,8 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	/*addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
 	addMesh({ { 0,2,0 },{ 0,2,10 },{ 10,2,10 },{ -5,2,0 },{ -5,2,-5 },{ 0,2,-5 } })
 	addBox({0,0,0},1,"origin")
+	addBox({3,0,0},1)
+	addBox({6,0,0},2)
 	camera({-10, 8, 0},{0, 0, 0})*/
 }
 
@@ -52,16 +54,22 @@ void Scene::addMesh(std::vector<std::vector<core::vector3df>> triangles) {
 	node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false); //Disable back face culling
 	node->setMaterialFlag(video::EMF_LIGHTING, false); //Disable lighting calculations
 	node->setAutomaticCulling(scene::EAC_OFF); //Disable culling
-	node->setName("Mesh" + m_nrOfNodes); //Assign name
+	std::string tempString = "Mesh" + std::to_string(m_nrOfMeshes);
+	const char* tempChars = tempString.c_str();
+	node->setName(tempChars); //Assign name
 	node->setID(m_nrOfNodes); //Assign id
 	m_nrOfNodes++; //Increase node counter
+	m_nrOfMeshes++;
 }
 
 void Scene::addBox(core::vector3df position, float size, std::string name) {
 	scene::IMeshSceneNode* box = m_smgr->addCubeSceneNode(size, 0, m_nrOfNodes, position); //Create cube node
 	//Assign name
 	if (name.empty()) {
-		box->setName("Box" + m_nrOfNodes);
+		std::string tempString = "Box" + std::to_string(m_nrOfBoxes);
+		const char* tempChars = tempString.c_str();
+		box->setName(tempChars);
+		m_nrOfBoxes++;
 	}
 	else {
 		box->setName(name.c_str());

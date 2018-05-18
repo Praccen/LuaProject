@@ -26,6 +26,7 @@ public:
 	~LuaHandler();
 
 	static int addMesh(lua_State * L);
+	static int addBox(lua_State * L);
 
 	void join();
 };

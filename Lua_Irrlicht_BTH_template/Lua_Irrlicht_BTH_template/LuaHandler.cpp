@@ -121,7 +121,7 @@ int LuaHandler::addMesh(lua_State * L) {
 		vertices.push_back(temp);
 	}
 
-	//m_scene->addMesh(vertices);
+	m_scene->addMesh(vertices);
 
 	return 0;
 }

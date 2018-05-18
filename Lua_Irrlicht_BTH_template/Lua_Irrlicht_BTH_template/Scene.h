@@ -17,6 +17,7 @@ public:
 
 	void addMesh(std::vector<std::vector<irr::core::vector3df>> triangles);
 	void addBox(irr::core::vector3df position, float size, std::string name);
+	void setCamera(irr::core::vector3df position, irr::core::vector3df target);
 
 	void update();
 	void draw();

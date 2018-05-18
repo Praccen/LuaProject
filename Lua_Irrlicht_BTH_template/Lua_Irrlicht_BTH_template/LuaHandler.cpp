@@ -163,7 +163,7 @@ int LuaHandler::addBox(lua_State * L) {
 		name = (std::string)lua_tostring(L, 3);
 	}
 
-	//m_scene->addBox(pos, size, name);
+	m_scene->addBox(pos, size, name);
 
 	return 0;
 }

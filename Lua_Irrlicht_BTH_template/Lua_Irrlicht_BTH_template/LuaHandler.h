@@ -12,6 +12,7 @@
 #include <thread>
 #include <irrlicht.h>
 #include "lua.hpp"
+#include <vector>
 
 #include "Scene.h"
 

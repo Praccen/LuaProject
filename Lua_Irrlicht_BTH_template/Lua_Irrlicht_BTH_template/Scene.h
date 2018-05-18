@@ -29,6 +29,8 @@ public:
 
 	std::vector<nodeInfo> getNodes();
 
+	int snapshot(std::string filePath);
+
 	void update();
 	void draw();
 };

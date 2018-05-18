@@ -46,7 +46,7 @@ void Scene::addMesh(core::vector3df vertex1, core::vector3df vertex2, core::vect
 	irr::scene::IMeshSceneNode* node = m_smgr->addMeshSceneNode(mesh);
 	node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
 	node->setMaterialFlag(video::EMF_LIGHTING, false);
-	node->setAutomaticCulling(false);
+	
 }
 
 void Scene::update() {

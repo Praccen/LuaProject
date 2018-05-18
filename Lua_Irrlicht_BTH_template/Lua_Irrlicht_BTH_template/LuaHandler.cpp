@@ -25,6 +25,8 @@ LuaHandler::LuaHandler(Scene* scene) {
 	lua_setglobal(L, "addBox");
 	lua_pushcfunction(L, camera);
 	lua_setglobal(L, "camera");
+	lua_pushcfunction(L, getNodes);
+	lua_setglobal(L, "getNodes");
 }
 
 
@@ -56,65 +58,17 @@ int LuaHandler::addMesh(lua_State * L) {
 	while (totLen > k) {
 		lua_rawgeti(L, input, k++);//Pushing first table of vertex list on lua stack
 		int first = lua_gettop(L);//Saving first table
-		//Checking that first index is a table
-		luaL_argcheck(L, lua_istable(L, -1), -1, "Error - vertex has to be a table");
-		//Checking the length of the first vertex to be 3
-		lua_len(L, first);//Pushing the length of the first table on the lua stack
-		len = (int)lua_tonumber(L, -1);//Retrieving number on top of stack
-		luaL_argcheck(L, len == 3, -1, "Error - vertex has to have 3 coordinates");
-		//Getting first index
-		int i = 1;
-		lua_rawgeti(L, first, i++);//Pushing first index of first table on lua stack
-		luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - First point has to be a number");
-		float x = (float)lua_tonumber(L, -1);//Retrieving number on top of stack
-		//Second index
-		lua_rawgeti(L, first, i++);//Pushing second index of first table on lua stack
-		luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - Second point has to be a number");
-		float y = (float)lua_tonumber(L, -1);//Retrieving number on top of stack
-		//Third index
-		lua_rawgeti(L, first, i);//Pushing third index of first table on lua stack
-		luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - Third point has to be a number");
-		float z = (float)lua_tonumber(L, -1);//Retrieving number on top of stack
-		//Setting vector to be sent to scene
-		irr::core::vector3df vertex1(x, y, z);
+		irr::core::vector3df vertex1 = createVector3(L, first);//creating vector with first table
 
 		//Getting data for second vertex
 		lua_rawgeti(L, input, k++);
 		int second = lua_gettop(L);
-		luaL_argcheck(L, lua_istable(L, -1), -2, "Error - vertex has to be a table");
-		lua_len(L, second);
-		len = (int)lua_tonumber(L, -1);
-		luaL_argcheck(L, len == 3, -2, "Error - vertex has to have 3 coordinates");
-		lua_rawgeti(L, second, 1);
-		luaL_argcheck(L, lua_isinteger(L, -1), -2, "Error - First point has to be a number");
-		x = (float)lua_tonumber(L, -1);
-		lua_rawgeti(L, second, 2);
-		luaL_argcheck(L, lua_isinteger(L, -1), -2, "Error - Second point has to be a number");
-		y = (float)lua_tonumber(L, -1);
-		lua_rawgeti(L, second, 3);
-		luaL_argcheck(L, lua_isinteger(L, -1), -2, "Error - Third point has to be a number");
-		z = (float)lua_tonumber(L, -1);
-
-		irr::core::vector3df vertex2(x, y, z);
+		irr::core::vector3df vertex2 = createVector3(L, second);
 
 		//Getting data for third vertex
 		lua_rawgeti(L, input, k++);
 		int third = lua_gettop(L);
-		luaL_argcheck(L, lua_istable(L, -1), -3, "Not a table in 3rd argument");
-		lua_len(L, third);
-		len = (int)lua_tonumber(L, -1);
-		luaL_argcheck(L, len == 3, -3, "Error - vertex has to have 3 coordinates");
-		lua_rawgeti(L, third, 1);
-		luaL_argcheck(L, lua_isinteger(L, -1), -3, "wrong 1 argument in third table");
-		x = (float)lua_tonumber(L, -1);
-		lua_rawgeti(L, third, 2);
-		luaL_argcheck(L, lua_isinteger(L, -1), -3, "wrong 2 argument in third table");
-		y = (float)lua_tonumber(L, -1);
-		lua_rawgeti(L, third, 3);
-		luaL_argcheck(L, lua_isinteger(L, -1), -3, "wrong 3 argument in third table");
-		z = (float)lua_tonumber(L, -1);
-
-		irr::core::vector3df vertex3(x, y, z);
+		irr::core::vector3df vertex3 = createVector3(L, third);
 		
 		std::vector<irr::core::vector3df> temp;
 		temp.push_back(vertex1);
@@ -135,26 +89,13 @@ int LuaHandler::addBox(lua_State * L) {
 	//Error checking
 	luaL_argcheck(L, top > 1 && top < 4, -1, "Error - Invalid number of arguments");
 	luaL_argcheck(L, lua_istable(L, 1), -1, "Error - Expected table in first argument");
-	luaL_argcheck(L, lua_isnumber(L, 2), -1, "Error - Expected number in second argument");
+	luaL_argcheck(L, lua_isinteger(L, 2), -1, "Error - Expected number in second argument");
 	if (top == 3) {
 		luaL_argcheck(L, lua_type(L, 3) == LUA_TSTRING, -1, "Error - Expected string in third argument");
 	}
 
-	lua_len(L, 1);
-	int len = (int)lua_tonumber(L, -1);
-	luaL_argcheck(L, len == 3, -1, "Error - Invalid number of coordinates");
-	lua_pop(L, 1);
-
 	//Getting first argument - pos
-	float x, y, z;
-	lua_rawgeti(L, 1, 1);
-	x = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 1, 2);
-	y = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 1, 3);
-	z = (float)lua_tonumber(L, -1);
-	lua_pop(L, 3);
-	irr::core::vector3df pos(x, y, z);
+	irr::core::vector3df pos = createVector3(L, 1);
 
 	//Getting second argument - size
 	float size = (float)lua_tonumber(L, 2);
@@ -179,44 +120,44 @@ int LuaHandler::camera(lua_State * L) {
 	
 	//Error checking
 	luaL_argcheck(L, top == 2, -1, "Error - Invalid number of arguments");
-	luaL_argcheck(L, lua_istable(L, 1), -1, "Error - first argument has to be a table");
-	luaL_argcheck(L, lua_istable(L, 2), -2, "Error - second argument has to be a table");
-	lua_len(L, 1);
-	int len = (int)lua_tonumber(L, -1);
-	luaL_argcheck(L, len == 3, -1, "Error - wrong number of coordinates in position");
-	lua_len(L, 2);
-	len = (int)lua_tonumber(L, -1);
-	luaL_argcheck(L, len == 3, -2, "Error - wrong number of coordinates in target");
-	lua_pop(L, 2);
 
 	//Getting coordinates for camera position
-	float x, y, z;
-	lua_rawgeti(L, 1, 1);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
-	x = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 1, 2);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
-	y = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 1, 3);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - position needs to be a numerical coordinate");
-	z = (float)lua_tonumber(L, -1);
-	lua_pop(L, 3);
-	irr::core::vector3df pos(x, y, z);
+	irr::core::vector3df pos = createVector3(L, 1);
 
 	//Getting coordinates for target position
-	lua_rawgeti(L, 2, 1);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
-	x = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 2, 2);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
-	y = (float)lua_tonumber(L, -1);
-	lua_rawgeti(L, 2, 3);
-	luaL_argcheck(L, lua_isnumber(L, -1), -1, "Error - target needs to be a numerical coordinate");
-	z = (float)lua_tonumber(L, -1);
-	lua_pop(L, 3);
-	irr::core::vector3df target(x, y, z);
+	irr::core::vector3df target = createVector3(L, 2);
 
 	m_scene->setCamera(pos, target);
 	
 	return 0;
+}
+
+int LuaHandler::getNodes(lua_State * L) {
+
+	return 0;
+}
+
+
+
+irr::core::vector3df LuaHandler::createVector3(lua_State * L, int idx) {
+	float x, y, z;
+	luaL_argcheck(L, lua_istable(L, idx), -1, "Error - Vector must be a table");
+	lua_len(L, idx);
+	int len = (int)lua_tonumber(L, -1);
+	luaL_argcheck(L, len == 3, -1, "Error - Vector has to have 3 arguments");
+	lua_pop(L, 1);
+	
+	lua_rawgeti(L, idx, 1);
+	luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - Vector has to have numerical entries");
+	x = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, idx, 2);
+	luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - Vector has to have numerical entries");
+	y = (float)lua_tonumber(L, -1);
+	lua_rawgeti(L, idx, 3);
+	luaL_argcheck(L, lua_isinteger(L, -1), -1, "Error - Vector has to have numerical entries");
+	z = (float)lua_tonumber(L, -1);
+	lua_pop(L, 3);
+	irr::core::vector3df vector(x, y, z);
+	
+	return vector;
 }

@@ -13,7 +13,7 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	/*addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
 	addMesh({ { 0,2,0 },{ 0,2,10 },{ 10,2,10 },{ -5,2,0 },{ -5,2,-5 },{ 0,2,-5 } })
 	addBox({0,0,0},1,"origin")
-	camera({ {-10.0f, 8.0f, 0.0f},{0.0f, 0.0f, 0.0f})*/
+	camera( {-10, 8, 0},{0, 0, 0})*/
 }
 
 Scene::~Scene() {

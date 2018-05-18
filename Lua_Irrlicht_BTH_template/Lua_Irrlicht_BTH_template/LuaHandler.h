@@ -22,6 +22,8 @@ private:
 	lua_State * m_luaState;
 	std::thread m_conThread;
 
+	
+
 public:
 	LuaHandler(Scene* scene);
 	~LuaHandler();
@@ -29,6 +31,9 @@ public:
 	static int addMesh(lua_State * L);
 	static int addBox(lua_State * L);
 	static int camera(lua_State * L);
+	static int getNodes(lua_State * L);
+
+	static irr::core::vector3df createVector3(lua_State * L, int idx);
 
 	void join();
 };

@@ -13,7 +13,7 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	/*addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
 	addMesh({ { 0,2,0 },{ 0,2,10 },{ 10,2,10 },{ -5,2,0 },{ -5,2,-5 },{ 0,2,-5 } })
 	addBox({0,0,0},1,"origin")
-	camera( {-10, 8, 0},{0, 0, 0})*/
+	camera({-10, 8, 0},{0, 0, 0})*/
 }
 
 Scene::~Scene() {
@@ -21,57 +21,72 @@ Scene::~Scene() {
 }
 
 void Scene::addMesh(std::vector<std::vector<core::vector3df>> triangles) {
-	irr::scene::SMesh* mesh = new scene::SMesh();
-	scene::SMeshBuffer *buf = 0;
-	buf = new scene::SMeshBuffer();
-	mesh->addMeshBuffer(buf);
+	irr::scene::SMesh* mesh = new scene::SMesh(); //Create mesh
+	scene::SMeshBuffer *buf = 0; //Create buffer
+	buf = new scene::SMeshBuffer(); //Initialize buffer
+	mesh->addMeshBuffer(buf); //Bind buffer to mesh
 	buf->drop();
 
-	buf->Vertices.reallocate(triangles.size() * 3);
+	buf->Vertices.reallocate(triangles.size() * 3); //Allocate buffer memory for all vertices
 	buf->Vertices.set_used(triangles.size() * 3);
 
-	buf->Indices.reallocate(triangles.size() * 3);
+	buf->Indices.reallocate(triangles.size() * 3); //Allocate buffer memory for all indices
 	buf->Indices.set_used(triangles.size() * 3);
 
-	for (unsigned int i = 0; i < triangles.size(); i++) {
-		core::triangle3df temp(triangles[i][0], triangles[i][1], triangles[i][2]);
-		core::vector3df norm = temp.getNormal();
+	for (unsigned int i = 0; i < triangles.size(); i++) { //Loop through all triangles in the mesh
+		core::triangle3df temp(triangles[i][0], triangles[i][1], triangles[i][2]); //Create a triangle based on the vertices
+		core::vector3df norm = temp.getNormal(); //Get the normal
 
+		//Add vertices from the triangle to the buffer memory
 		buf->Vertices[3 * i + 0] = video::S3DVertex(temp.pointA, norm, video::SColor(255, 0, 0, 0), core::vector2df(0.0f, 0.0f));
 		buf->Vertices[3 * i + 1] = video::S3DVertex(temp.pointB, norm, video::SColor(255, 0, 0, 0), core::vector2df(1.0f, 0.0f));
 		buf->Vertices[3 * i + 2] = video::S3DVertex(temp.pointC, norm, video::SColor(255, 0, 0, 0), core::vector2df(0.5f, 1.0f));
 
+		//Add indices to the buffer memory
 		buf->Indices[3 * i + 0] = 3 * i + 0;
 		buf->Indices[3 * i + 1] = 3 * i + 1;
 		buf->Indices[3 * i + 2] = 3 * i + 2;
 	}
-	buf->recalculateBoundingBox();
-	irr::scene::IMeshSceneNode* node = m_smgr->addMeshSceneNode(mesh);
-	node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-	node->setMaterialFlag(video::EMF_LIGHTING, false);
-	node->setAutomaticCulling(scene::EAC_OFF);
-	node->setName("Mesh" + m_nrOfNodes);
-	node->setID(m_nrOfNodes);
-	m_nrOfNodes++;
+	buf->recalculateBoundingBox(); //Calculate mesh bounding box
+	irr::scene::IMeshSceneNode* node = m_smgr->addMeshSceneNode(mesh); //Create a node with the mesh
+	node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false); //Disable back face culling
+	node->setMaterialFlag(video::EMF_LIGHTING, false); //Disable lighting calculations
+	node->setAutomaticCulling(scene::EAC_OFF); //Disable culling
+	node->setName("Mesh" + m_nrOfNodes); //Assign name
+	node->setID(m_nrOfNodes); //Assign id
+	m_nrOfNodes++; //Increase node counter
 }
 
 void Scene::addBox(core::vector3df position, float size, std::string name) {
-	scene::IMeshSceneNode* box = m_smgr->addCubeSceneNode(size, 0, m_nrOfNodes, position);
+	scene::IMeshSceneNode* box = m_smgr->addCubeSceneNode(size, 0, m_nrOfNodes, position); //Create cube node
+	//Assign name
 	if (name.empty()) {
 		box->setName("Box" + m_nrOfNodes);
 	}
 	else {
 		box->setName(name.c_str());
 	}
-	box->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
-	box->setMaterialFlag(video::EMF_LIGHTING, false);
+	box->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false); //Disable back face culling
+	box->setMaterialFlag(video::EMF_LIGHTING, false); //Disable lighting
 
-	m_nrOfNodes++;
+	m_nrOfNodes++; //Increase node counter
 }
 
 void Scene::setCamera(core::vector3df position, core::vector3df target) {
 	m_camera->setPosition(position);
 	m_camera->setTarget(target);
+}
+
+std::vector<nodeInfo> Scene::getNodes() {
+	std::vector<nodeInfo> returnVector;
+	for (int i = 0; i < m_nrOfNodes; i++) { //Loop through nodes
+		scene::ISceneNode* tempNode = m_smgr->getSceneNodeFromId(i); //Get node
+		nodeInfo tempInfo;
+		tempInfo.name = tempNode->getName(); //Get node name
+		tempInfo.id = i; //Get node ID
+		returnVector.push_back(tempInfo); //Add info to the vector
+	}
+	return returnVector;
 }
 
 void Scene::update() {

@@ -142,23 +142,18 @@ int LuaHandler::getNodes(lua_State * L) {
 
 	int k = 1;
 	for (int i = 0; i < temp.size(); i++) {
-		lua_pushnumber(L, k);
+		lua_pushnumber(L, k++);
 		lua_newtable(L);
 		int current = lua_gettop(L);
+		lua_pushstring(L, "id");
+		lua_pushnumber(L, temp.at(i).id);
+		lua_settable(L, current);
 		lua_pushstring(L, "name");
 		lua_pushstring(L, temp.at(i).name.c_str());
 		lua_settable(L, current);
 		lua_settable(L, top);
-		k++;
-		lua_pushnumber(L, k);
-		lua_newtable(L);
-		current = lua_gettop(L);
-		lua_pushstring(L, "id");
-		lua_pushnumber(L, temp.at(i).id);
-		lua_settable(L, current);
-		lua_settable(L, top);
-		k++;
 	}
+
 
 	return 1;
 }

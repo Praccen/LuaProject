@@ -94,7 +94,7 @@ std::vector<nodeInfo> Scene::getNodes() {
 		scene::ISceneNode* tempNode = m_smgr->getSceneNodeFromId(i); //Get node
 		nodeInfo tempInfo;
 		tempInfo.name = tempNode->getName(); //Get node name
-		tempInfo.id = i; //Get node ID
+		tempInfo.id = i; //Node ID
 		returnVector.push_back(tempInfo); //Add info to the vector
 	}
 	return returnVector;

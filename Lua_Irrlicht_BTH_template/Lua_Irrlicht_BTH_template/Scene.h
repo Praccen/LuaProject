@@ -16,6 +16,9 @@ private:
 	irr::scene::ISceneManager* m_smgr;
 	irr::scene::ICameraSceneNode* m_camera;
 
+	bool m_snapshotPending;
+	std::string m_pendingFilename;
+
 	int m_nrOfNodes = 0;
 	int m_nrOfMeshes = 0;
 	int m_nrOfBoxes = 0;
@@ -30,6 +33,7 @@ public:
 	std::vector<nodeInfo> getNodes();
 
 	int snapshot(std::string filePath);
+	void executePendingSnapshot();
 
 	void update();
 	void draw();

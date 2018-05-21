@@ -10,6 +10,9 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	m_camera->setPosition(core::vector3df(0.0f, 0.0f, 0.0f));
 	m_camera->setNearValue(0.01f);
 
+	m_snapshotPending = false;
+	m_pendingFilename = "";
+
 	/*addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
 	addMesh({ { 0,2,0 },{ 0,2,10 },{ 10,2,10 },{ -5,2,0 },{ -5,2,-5 },{ 0,2,-5 } })
 	addBox({0,0,0},1,"origin")
@@ -99,14 +102,31 @@ std::vector<nodeInfo> Scene::getNodes() {
 
 int Scene::snapshot(std::string filePath) {
 	int returnValue = 0;
-	io::path path = filePath.c_str();
-	video::IImage* screenshot = m_device->getVideoDriver()->createScreenShot();
+	if (!m_snapshotPending) {
+		m_snapshotPending = true;
+		m_pendingFilename = filePath;
+	}
+
+	io::path path = m_pendingFilename.c_str();
 	io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path);
-	if (m_device->getVideoDriver()->writeImageToFile(screenshot, file)) {
-		file->drop();
+	if (file != 0) {
 		returnValue = 1;
 	}
+	
 	return returnValue;
+}
+
+void Scene::executePendingSnapshot() {
+	if (m_snapshotPending) {
+		io::path path = m_pendingFilename.c_str();
+		video::IImage* screenshot = m_device->getVideoDriver()->createScreenShot();
+		io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path);
+		if (m_device->getVideoDriver()->writeImageToFile(screenshot, file)) {
+			file->drop();
+		}
+		m_snapshotPending = false;
+		m_pendingFilename = "";
+	}
 }
 
 void Scene::update() {

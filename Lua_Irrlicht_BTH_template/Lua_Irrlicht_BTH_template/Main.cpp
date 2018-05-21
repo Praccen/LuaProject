@@ -37,7 +37,8 @@ int main()
 		scene.draw();
 		guienv->drawAll();
 
-		driver->endScene();		
+		driver->endScene();	
+		scene.executePendingSnapshot();
 	}
 
 	device->drop();

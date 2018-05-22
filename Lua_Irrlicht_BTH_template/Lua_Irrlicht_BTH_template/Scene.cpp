@@ -17,13 +17,6 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 
 	m_snapshotPending = false;
 	m_pendingFilename = "";
-
-	/*addMesh({{-10,-10,50},{10,-10,50},{0,10,50}})
-	addMesh({ { 0,2,0 },{ 0,2,10 },{ 10,2,10 },{ -5,2,0 },{ -5,2,-5 },{ 0,2,-5 } })
-	addBox({0,0,0},1,"origin")
-	addBox({3,0,0},1)
-	addBox({6,0,0},2)
-	camera({-10, 8, 0},{0, 0, 0})*/
 }
 
 Scene::~Scene() {
@@ -101,6 +94,8 @@ std::vector<nodeInfo> Scene::getNodes() {
 		tempInfo.name = tempNode->getName(); //Get node name
 		tempInfo.id = i; //Node ID
 		scene::ESCENE_NODE_TYPE tempType = tempNode->getType();
+
+		//Set type to a fitting string
 		switch (tempType) {
 		case scene::ESCENE_NODE_TYPE::ESNT_CAMERA: 
 			tempInfo.type = "Camera";
@@ -122,11 +117,14 @@ std::vector<nodeInfo> Scene::getNodes() {
 
 int Scene::snapshot(std::string filePath) {
 	int returnValue = 0;
+
+	//Set pending snapshot flags
 	if (!m_snapshotPending) {
 		m_snapshotPending = true;
 		m_pendingFilename = filePath;
 	}
 
+	//Test open the file to see if it is writable
 	io::path path = m_pendingFilename.c_str();
 	io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path);
 	if (file != 0) {
@@ -137,13 +135,16 @@ int Scene::snapshot(std::string filePath) {
 }
 
 void Scene::executePendingSnapshot() {
+	//Take snapshot if pending snapshot flags are activated
 	if (m_snapshotPending) {
 		io::path path = m_pendingFilename.c_str();
-		video::IImage* screenshot = m_device->getVideoDriver()->createScreenShot();
-		io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path);
-		if (m_device->getVideoDriver()->writeImageToFile(screenshot, file)) {
-			file->drop();
+		video::IImage* screenshot = m_device->getVideoDriver()->createScreenShot(); //Take snapshot
+		io::IWriteFile* file = m_device->getFileSystem()->createAndWriteFile(path); //Open file for writing
+		if (m_device->getVideoDriver()->writeImageToFile(screenshot, file)) { //Write snapshot to file
+			file->drop(); //Close the file
 		}
+
+		//Deactivate flags
 		m_snapshotPending = false;
 		m_pendingFilename = "";
 	}

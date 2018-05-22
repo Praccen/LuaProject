@@ -41,11 +41,6 @@ void LuaHandler::join() {
 	m_conThread.join();
 }
 
-//Test data
-//addMesh({{0,0,0}, {5,0,0}, {0,0,5}})		 --Simple triangle in the plane
-//addMesh({{ "orange" }, {}, {}})              --Error: non - numeric coordinates
-//addMesh({{ 1,2,3,4 },{},{}})               --Error : number of components
-//addMesh({{ 1,2,3 }})                       --Error : not a valid number of vertices
 int LuaHandler::addMesh(lua_State * L) {
 	luaL_argcheck(L, lua_istable(L, -1), -1, "Error - Expected table");
 	int input = lua_gettop(L);
@@ -113,10 +108,6 @@ int LuaHandler::addBox(lua_State * L) {
 	return 0;
 }
 
-//TEST DATA
-/*
-camera({0,5,-20}, {0,0,0})
-*/
 int LuaHandler::camera(lua_State * L) {
 	int top = lua_gettop(L);
 	

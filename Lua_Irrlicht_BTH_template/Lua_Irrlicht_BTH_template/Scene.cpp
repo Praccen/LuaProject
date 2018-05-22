@@ -6,9 +6,14 @@ Scene::Scene(irr::IrrlichtDevice* device) {
 	m_device = device;
 	m_smgr = device->getSceneManager();
 
-	m_camera = m_smgr->addCameraSceneNodeFPS(0, 100.0f, 0.005f, -1, 0, 0, false, 0.0f, false, true);
+	m_camera = m_smgr->addCameraSceneNodeFPS(0, 100.0f, 0.005f, 0, 0, 0, false, 0.0f, false, true); //Camera creation
+	m_camera->setName("Camera");
 	m_camera->setPosition(core::vector3df(0.0f, 0.0f, 0.0f));
 	m_camera->setNearValue(0.01f);
+
+	m_nrOfNodes = 1; //1 Because 4th argument in camera creation is Id and is set to 0
+	m_nrOfBoxes = 0;
+	m_nrOfMeshes = 0;
 
 	m_snapshotPending = false;
 	m_pendingFilename = "";
@@ -95,6 +100,21 @@ std::vector<nodeInfo> Scene::getNodes() {
 		nodeInfo tempInfo;
 		tempInfo.name = tempNode->getName(); //Get node name
 		tempInfo.id = i; //Node ID
+		scene::ESCENE_NODE_TYPE tempType = tempNode->getType();
+		switch (tempType) {
+		case scene::ESCENE_NODE_TYPE::ESNT_CAMERA: 
+			tempInfo.type = "Camera";
+			break;
+		case scene::ESCENE_NODE_TYPE::ESNT_MESH:
+			tempInfo.type = "Mesh";
+			break;
+		case scene::ESCENE_NODE_TYPE::ESNT_CUBE:
+			tempInfo.type = "Cube";
+			break;
+		default: 
+			tempInfo.type = "Other";
+			break;
+		}
 		returnVector.push_back(tempInfo); //Add info to the vector
 	}
 	return returnVector;

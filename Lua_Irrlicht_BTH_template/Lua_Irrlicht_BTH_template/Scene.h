@@ -8,6 +8,7 @@
 struct nodeInfo {
 	std::string name;
 	int id;
+	std::string type;
 };
 
 class Scene {
@@ -19,9 +20,9 @@ private:
 	bool m_snapshotPending;
 	std::string m_pendingFilename;
 
-	int m_nrOfNodes = 0;
-	int m_nrOfMeshes = 0;
-	int m_nrOfBoxes = 0;
+	int m_nrOfNodes;
+	int m_nrOfMeshes;
+	int m_nrOfBoxes;
 public:
 	Scene(irr::IrrlichtDevice* device);
 	~Scene();

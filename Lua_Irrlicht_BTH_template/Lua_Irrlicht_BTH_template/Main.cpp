@@ -25,7 +25,7 @@ int main()
 	irr::video::IVideoDriver* driver	= device->getVideoDriver();
 	irr::gui::IGUIEnvironment* guienv	= device->getGUIEnvironment();
 
-	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!", irr::core::rect<irr::s32>(10, 10, 260, 22), true);
+	//guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!", irr::core::rect<irr::s32>(10, 10, 260, 22), true);
 
 	Scene scene(device); //Creates scene containing objects and camera
 	LuaHandler luaHandler(&scene); //Starts the LuaHandler and it's thread

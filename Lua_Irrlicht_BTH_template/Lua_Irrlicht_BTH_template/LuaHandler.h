@@ -19,7 +19,6 @@
 class LuaHandler {
 private:
 	static Scene * m_scene;
-	lua_State * m_luaState;
 	std::thread m_conThread;
 
 	

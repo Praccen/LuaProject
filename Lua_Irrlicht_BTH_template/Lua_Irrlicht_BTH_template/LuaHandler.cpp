@@ -19,6 +19,7 @@ LuaHandler::LuaHandler(Scene* scene) {
 	luaL_openlibs(L);
 	m_conThread = std::thread(ConsoleThread, L); //Starts console input thread
 
+	//Adding function to lua
 	lua_pushcfunction(L, addMesh);
 	lua_setglobal(L, "addMesh");
 	lua_pushcfunction(L, addBox);
@@ -58,7 +59,7 @@ int LuaHandler::addMesh(lua_State * L) {
 	//Getting data for first vertex
 	while (totLen > k) {
 		lua_rawgeti(L, input, k++);//Pushing first table of vertex list on lua stack
-		int first = lua_gettop(L);//Saving first table
+		int first = lua_gettop(L);//Saving position of first table on stack
 		irr::core::vector3df vertex1 = createVector3(L, first);//creating vector with first table
 
 		//Getting data for second vertex
@@ -137,21 +138,25 @@ int LuaHandler::getNodes(lua_State * L) {
 	
 	std::vector<nodeInfo> temp = m_scene->getNodes();
 
+	//Creating table to be returned
 	lua_newtable(L);
-	int top = lua_gettop(L);
+	int top = lua_gettop(L);//Saving position
 
-	int k = 1;
+	int k = 1;//first index/key of the table to be returned
 	for (int i = 0; i < temp.size(); i++) {
-		lua_pushnumber(L, k++);
-		lua_newtable(L);
+		lua_pushnumber(L, k++);//Pushing key to top of stack
+		lua_newtable(L);//Creating a new table on top of stack, containing the data for the node
 		int current = lua_gettop(L);
 		lua_pushstring(L, "id");
 		lua_pushnumber(L, temp.at(i).id);
-		lua_settable(L, current);
+		lua_settable(L, current);//adding the id to the node table
+		lua_pushstring(L, "type");
+		lua_pushstring(L, temp.at(i).type.c_str());
+		lua_settable(L, current);//adding the type to the node table
 		lua_pushstring(L, "name");
 		lua_pushstring(L, temp.at(i).name.c_str());
-		lua_settable(L, current);
-		lua_settable(L, top);
+		lua_settable(L, current);//adding the name to the node table
+		lua_settable(L, top);//adding node table to complete table
 	}
 
 

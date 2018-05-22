@@ -54,7 +54,6 @@ void Scene::addMesh(std::vector<std::vector<core::vector3df>> triangles) {
 	irr::scene::IMeshSceneNode* node = m_smgr->addMeshSceneNode(mesh); //Create a node with the mesh
 	node->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false); //Disable back face culling
 	node->setMaterialFlag(video::EMF_LIGHTING, false); //Disable lighting calculations
-	node->setAutomaticCulling(scene::EAC_OFF); //Disable culling
 	std::string tempString = "Mesh" + std::to_string(m_nrOfMeshes);
 	const char* tempChars = tempString.c_str();
 	node->setName(tempChars); //Assign name
